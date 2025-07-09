@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeDash! - Official Page</title>
+
+    <!-- Google Fonts: Courier Prime for text and Pixelify Sans for the title -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+
+    <!-- Link to our CSS file -->
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- TITLE SECTION -->
+        <header>
+            <h1 id="codedash-title">CodeDash!</h1>
+        </header>
+
+        <main>
+            <!-- INTRO SECTION WITH ANIMATED SPRITE -->
+            <section id="intro">
+                <div class="sprite-container" id="sprite1">
+                    <!-- This div will contain the animated sprite -->
+                    <div class="speech-bubble" id="bubble1">Loading...</div>
+                </div>
+            </section>
+
+            <!-- LORE AND GAMEPLAY VIDEO SECTION (Two-column layout) -->
+            <section id="lore-music" class="content-box">
+                <div class="lore-text">
+                    <h2>Game Lore</h2>
+                    <p>You are an antivirus entity in a complex server system. Unfortunately, your time has come: fight the polymorphic infection with all necessary means!</p>
+                </div>
+                <div class="music-video">
+                    <h3>Gameplay Video</h3>
+                    <!-- !!! REPLACE THIS LINK with the "embed" URL of your GAMEPLAY video !!! -->
+                    <iframe 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </section>
+
+            <!-- MUSIC INFO AND SOUNDTRACK SECTION -->
+            <section id="chiptune-info" class="content-box" style="display: flex; flex-wrap: wrap; gap: 30px;">
+                <div style="flex: 2; min-width: 300px;">
+                    <h2>The Magic of Chiptune</h2>
+                    <p>The CodeDash! soundtrack is crafted in "chiptune" style, a music genre that uses the sound chips of old computers and consoles (like the Commodore 64 or Game Boy). Every note and effect has been meticulously programmed using a "tracker," software that allows composing music as if writing code, to create a nostalgic and adrenaline-fueled atmosphere that will accompany you on your dash.</p>
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>Original Soundtrack</h3>
+                    <!-- This is the Original Soundtrack playlist -->
+                    <iframe 
+                        style="width: 100%; aspect-ratio: 16/9; border-radius: 5px;"
+                        src="https://www.youtube.com/embed/Nacka_m2S2E?si=2s87C4n8gJkL9f8P" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </section>
+
+            <!-- FEATURES SECTION -->
+            <section id="features" class="content-box">
+                <h2>Features</h2>
+
+                <div class="feature-item privacy">
+                    <h3>Totally Offline & Secure</h3>
+                    <p>Your privacy is our priority. CodeDash! is <strong>100% offline</strong>. No data is collected, no internet connection required. The game uses an internal database (IndexedDB) to save your progress on your device and <strong>requires no special permissions</strong>.</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Classic Gameplay, Modern Fun</h3>
+                    <ul>
+                        <li><strong>Jump and Shoot:</strong> Face a vast pool of enemies, both on the ground and in the air, with simple and responsive controls.</li>
+                        <li><strong>Incredible Power-ups:</strong> Collect temporary boosts to unleash hell and permanent bonuses (for the current run) to become unstoppable.</li>
+                        <li><strong>Earn Currencies:</strong> Accumulate Bits and the precious digital Fruit to unlock new content.</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Customize Your Adventure</h3>
+                    <p>Visit the brand-new in-game <strong>Shop</strong> to spend your earned currencies. Buy unique skins for the donkey, for its projectiles, and unlock permanent power-ups. With the Fruit, you can also acquire the <strong>incredible companions</strong> that will help you in your fight!</p>
+                </div>
+                
+                <div class="feature-item">
+                    <h3>Challenges and Rewards</h3>
+                    <p>Complete <strong>Trophies and Badges</strong> to prove your skill and get exclusive rewards you won't find anywhere else.</p>
+                </div>
+
+                <div class="feature-item difficulty">
+                    <h3>Two Difficulty Levels</h3>
+                    <p><strong>Normal Run:</strong> The classic CodeDash! experience.<br><strong>Digital Rain Run:</strong> Wait in the menu for the alarm and the start of the digital rain. When it happens, start the run and fight 30% more enemies and stronger bosses! But the risk is worth the reward: when there's digital rain, there's also extra <strong>Digital Fruit</strong>!</p>
+                </div>
+            </section>
+
+            <!-- DOWNLOAD SECTION -->
+            <section id="download" class="content-box">
+                <h2>Ready to Dash?</h2>
+                <p>The digital world needs you. Download CodeDash! now, it's free and has no ads!</p>
+                <!-- !!! In the future, replace "#" with the link to the Google Play Store !!! -->
+                <a href="#" class="cta-button">Download on Google Play</a>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Your Name/Studio. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Terms & Conditions</a> | <a href="#">Privacy Policy</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Link to our JavaScript file, placed at the end for better performance -->
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,10 +1,10 @@
 /* --- IMPOSTAZIONI GLOBALI E FONT --- */
 :root {
-    --bg-color: #0d1117; /* Sfondo scuro, quasi nero */
-    --primary-color: #0a192f; /* Blu scuro per i box */
-    --secondary-color: #1f2a48; /* Un blu leggermente più chiaro */
-    --text-color: #cdd6f4; /* Testo principale, un azzurro-grigio chiaro */
-    --highlight-color: #0ce6f2; /* Ciano brillante per highlights e titoli */
+    --bg-color: #0d1117;
+    --primary-color: #0a192f;
+    --secondary-color: #1f2a48;
+    --text-color: #cdd6f4;
+    --highlight-color: #0ce6f2;
     --glow-start: #0ce6f2;
     --glow-end: #0098db;
 }
@@ -50,7 +50,7 @@ header {
 }
 
 #codedash-title {
-    font-size: 4.5em; /* Più grande per essere d'impatto */
+    font-size: 4.5em;
     font-weight: bold;
     color: #ffffff;
     text-shadow: 
@@ -81,11 +81,10 @@ header {
     padding: 25px 35px;
     margin-bottom: 40px;
     position: relative;
-    overflow: hidden; /* Nasconde le scanlines che escono dai bordi */
+    overflow: hidden;
     box-shadow: 0 0 15px rgba(12, 230, 242, 0.1);
 }
 
-/* Effetto scanlines */
 .content-box::before {
     content: "";
     position: absolute;
@@ -93,44 +92,107 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(
-        rgba(255, 255, 255, 0.03) 50%,
-        transparent 50%
-    );
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 50%, transparent 50%);
     background-size: 100% 4px;
-    pointer-events: none; /* Permette di cliccare attraverso */
+    pointer-events: none;
     z-index: 1;
 }
 
 .content-box > * {
     position: relative;
-    z-index: 2; /* Assicura che il contenuto sia sopra le scanlines */
+    z-index: 2;
 }
+
+/* --- NUOVA SEZIONE INTERATTIVA --- */
+#interactive-animation {
+    text-align: center;
+}
+.feed-prompt {
+    font-size: 0.9em;
+    opacity: 0.7;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+#animation-screen {
+    background-color: #0d1117;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    height: 200px;
+    position: relative;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+#fruit-container {
+    position: absolute;
+    width: 16px; /* Dimensione del frutto */
+    height: 16px;
+}
+#fruit-container img {
+    width: 100%;
+    height: 100%;
+}
+#controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+#feed-button {
+    background-color: var(--highlight-color);
+    color: var(--bg-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+#feed-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--highlight-color);
+}
+#feed-button:disabled {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+#feed-button i {
+    font-size: 1.5em;
+}
+#fruit-counter {
+    font-size: 1.1em;
+}
+
 
 /* --- SPRITE ANIMATO E SPEECH BUBBLE --- */
-#intro {
-    height: 100px; /* Spazio per lo sprite */
-    position: relative;
-    margin-bottom: 40px;
-}
-
 .sprite-container {
     width: 64px;
     height: 64px;
-    /* !!! CAMBIA 'donkey-dev-sprite.png' con il nome del tuo file sprite !!! */
     background-image: url('donkey-dev-sprite.png');
     background-repeat: no-repeat;
     position: absolute;
-    left: 0; /* La posizione verrà aggiornata da JS */
-    bottom: 0;
-    transition: left 0.1s linear;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.1s linear, top 0.1s linear;
+}
+
+/* Classe per girare lo sprite */
+.sprite-container.flipped {
+    transform: translate(-50%, -50%) scaleX(-1);
 }
 
 .speech-bubble {
     position: absolute;
-    bottom: 70px; /* Sopra la testa dello sprite */
+    bottom: 70px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scaleX(1); /* Assicura che la nuvoletta non si giri */
     background-color: white;
     color: var(--bg-color);
     padding: 8px 12px;
@@ -143,13 +205,13 @@ header {
     transition: opacity 0.3s, visibility 0.3s;
     z-index: 10;
 }
-
+.sprite-container.flipped .speech-bubble {
+     transform: translateX(-50%) scaleX(-1); /* Gira la nuvoletta insieme allo sprite */
+}
 .speech-bubble.visible {
     opacity: 1;
     visibility: visible;
 }
-
-/* Freccetta della nuvoletta */
 .speech-bubble::after {
     content: '';
     position: absolute;
@@ -166,9 +228,10 @@ header {
 #lore-music {
     display: flex;
     gap: 30px;
+    flex-wrap: wrap;
 }
-.lore-text { flex: 2; }
-.music-video { flex: 1; }
+.lore-text { flex: 2; min-width: 300px; }
+.music-video { flex: 1; min-width: 250px; }
 .music-video iframe {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -191,7 +254,6 @@ header {
     color: var(--highlight-color);
     font-weight: bold;
 }
-
 .feature-item.privacy, .feature-item.difficulty {
     border-left: 3px solid var(--highlight-color);
     padding-left: 20px;
@@ -199,9 +261,7 @@ header {
 }
 
 /* --- BOTTONE CALL TO ACTION --- */
-#download {
-    text-align: center;
-}
+#download { text-align: center; }
 .cta-button {
     display: inline-block;
     background-color: var(--highlight-color);
@@ -221,25 +281,20 @@ header {
     color: black;
 }
 
+/* --- FOOTER --- */
 footer {
     text-align: center;
     margin-top: 60px;
     font-size: 0.9em;
     opacity: 0.6;
 }
+.footer-links a {
+    margin: 0 10px;
+}
 
 /* --- MEDIA QUERIES PER RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
-    body {
-        font-size: 16px;
-    }
-    #codedash-title {
-        font-size: 3em;
-    }
-    #lore-music {
-        flex-direction: column;
-    }
-    .content-box {
-        padding: 20px;
-    }
+    body { font-size: 16px; }
+    #codedash-title { font-size: 3em; }
+    .content-box { padding: 20px; }
 }

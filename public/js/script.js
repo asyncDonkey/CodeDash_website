@@ -1,89 +1,148 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- ELEMENTI DEL DOM ---
+    const sprite = document.getElementById('sprite1');
+    const bubble = document.getElementById('bubble1');
+    const animationScreen = document.getElementById('animation-screen');
+    const fruitContainer = document.getElementById('fruit-container');
+    const fruitImage = document.getElementById('fruit-image');
+    const feedButton = document.getElementById('feed-button');
+    const fruitCounter = document.getElementById('fruit-counter');
 
-    // --- IMPOSTAZIONI DELLO SPRITE ---
-    const spriteElement = document.getElementById('sprite1');
-    const bubbleElement = document.getElementById('bubble1');
-    
-    // Controlla se gli elementi esistono prima di procedere
-    if (!spriteElement || !bubbleElement) {
-        console.error("Elementi dello sprite non trovati!");
+    if (!sprite || !animationScreen || !feedButton) {
+        console.error("Elementi essenziali dell'animazione non trovati!");
         return;
     }
 
-    // Parametri dell'animazione
-    const frameCount = 5; // Numero di frame nel tuo spritesheet
-    const frameWidth = 64; // Larghezza di un singolo frame
-    const animationSpeed = 150; // Millisecondi tra un frame e l'altro
-
-    // Parametri del movimento
-    let position = 0;
-    let direction = 1; // 1 = destra, -1 = sinistra
-    const movementSpeed = 1.5;
-
-    // Messaggi per la nuvoletta
-    const messages = [
-        "please try the game: there are no ADS!",
-        "the game is totally free and funny!",
-        "CodeDash!",
-        "i have to Dash!"
+    // --- ASSETS ---
+    const digitalFruits = [
+        'digital_apple.png', 'digital_banana.png', 'digital_berry.png', 'digital_blueberry.png',
+        'digital_cherry.png', 'digital_coconut.png', 'digital_dragonfruit.png', 'digital_grapes.png',
+        'digital_kiwi.png', 'digital_lemon.png', 'digital_melon.png', 'digital_orange.png',
+        'digital_papaya.png', 'digital_peach.png', 'digital_pear.png', 'digital_pineapple.png',
+        'digital_strawberry.png', 'digital_watermelon.png'
     ];
+    const donkeyComments = [
+        "Yummy!", "Delicious!", "More fruits, please!", "That was refreshing!", "My favorite!"
+    ];
+    const sfx = {
+        eat: new Audio('assets/sfx/sfx_donkey_eat.ogg'),
+        digest: new Audio('assets/sfx/sfx_donkey_digest.ogg'),
+        comment: new Audio('assets/sfx/sfx_donkey_comment.ogg')
+    };
 
-    let currentFrame = 0;
+    // --- STATO DELL'ANIMAZIONE ---
+    let state = {
+        fruitEatenCount: 0,
+        isMoving: false,
+        isDigesting: false,
+        currentFrame: 0,
+        animationInterval: null,
+        donkeyPos: { x: animationScreen.offsetWidth / 2, y: animationScreen.offsetHeight / 2 },
+        fruitPos: { x: 0, y: 0 }
+    };
+    sprite.style.left = `${state.donkeyPos.x}px`;
+    sprite.style.top = `${state.donkeyPos.y}px`;
 
-    // --- FUNZIONE PER ANIMARE I FRAME DELLO SPRITE ---
-    setInterval(() => {
-        currentFrame = (currentFrame + 1) % frameCount;
-        const backgroundPositionX = -currentFrame * frameWidth;
-        spriteElement.style.backgroundPosition = `${backgroundPositionX}px 0px`;
-    }, animationSpeed);
+    // --- FUNZIONI DI ANIMAZIONE DELLO SPRITE ---
+    const setSpriteAnimation = (spriteSheet, frameCount, frameRate) => {
+        clearInterval(state.animationInterval);
+        sprite.style.backgroundImage = `url('assets/images/${spriteSheet}')`;
+        state.animationInterval = setInterval(() => {
+            state.currentFrame = (state.currentFrame + 1) % frameCount;
+            sprite.style.backgroundPosition = `${-state.currentFrame * 64}px 0px`;
+        }, frameRate);
+    };
 
+    const startIdleAnimation = () => setSpriteAnimation('donkey-dev-sprite.png', 5, 200);
+    const startDigestionAnimation = () => setSpriteAnimation('donkey-digest-sprite.png', 9, 3000 / 9);
 
-    // --- FUNZIONE PER IL MOVIMENTO ORIZZONTALE ---
-    function moveSprite() {
-        const containerWidth = spriteElement.parentElement.offsetWidth;
-        const spriteWidth = spriteElement.offsetWidth;
+    // --- FUNZIONI DI GIOCO ---
+    const showBubble = (message) => {
+        bubble.textContent = message;
+        bubble.classList.add('visible');
+        sfx.comment.play();
+        setTimeout(() => bubble.classList.remove('visible'), 2500);
+    };
 
-        position += movementSpeed * direction;
+    const updateCounter = () => {
+        fruitCounter.textContent = `Fruits eaten: ${state.fruitEatenCount} / 5`;
+    };
 
-        // Inverti la direzione quando tocca i bordi
-        if (position > containerWidth - spriteWidth || position < 0) {
-            direction *= -1;
-        }
-
-        spriteElement.style.left = `${position}px`;
+    const handleDigestion = () => {
+        state.isDigesting = true;
+        feedButton.disabled = true;
         
-        // Continua il ciclo di animazione del movimento
-        requestAnimationFrame(moveSprite);
-    }
+        startDigestionAnimation();
+        sfx.digest.play();
 
-    // --- FUNZIONE PER GESTIRE LE NUVOLETTE ---
-    function manageSpeechBubble() {
-        // Nascondi sempre la nuvoletta all'inizio
-        bubbleElement.classList.remove('visible');
-
-        // Decidi casualmente se mostrare una nuvoletta
-        const shouldShow = Math.random() < 0.2; // 20% di probabilità di mostrare la nuvoletta ogni tot secondi
-
-        if (shouldShow) {
-            // Scegli un messaggio casuale
-            const randomIndex = Math.floor(Math.random() * messages.length);
-            bubbleElement.textContent = messages[randomIndex];
-            bubbleElement.classList.add('visible');
-
-            // Nascondi la nuvoletta dopo qualche secondo
+        setTimeout(() => {
+            startIdleAnimation();
+            showBubble(donkeyComments[Math.floor(Math.random() * donkeyComments.length)]);
+            
             setTimeout(() => {
-                bubbleElement.classList.remove('visible');
-            }, 4000); // La nuvoletta resta visibile per 4 secondi
+                state.fruitEatenCount = 0;
+                updateCounter();
+                state.isDigesting = false;
+                feedButton.disabled = false;
+            }, 2600); // Attende la fine della nuvoletta
+
+        }, 3000); // Durata animazione digestione
+    };
+
+    const moveToFruit = () => {
+        const dx = state.fruitPos.x - state.donkeyPos.x;
+        const dy = state.fruitPos.y - state.donkeyPos.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 10) { // Donkey has reached the fruit
+            state.isMoving = false;
+            fruitContainer.style.display = 'none';
+            sfx.eat.play();
+            state.fruitEatenCount++;
+            updateCounter();
+
+            if (state.fruitEatenCount >= 5) {
+                handleDigestion();
+            } else {
+                feedButton.disabled = false;
+            }
+            return;
         }
+
+        // Move donkey
+        const speed = 3;
+        state.donkeyPos.x += (dx / distance) * speed;
+        state.donkeyPos.y += (dy / distance) * speed;
+        sprite.style.left = `${state.donkeyPos.x}px`;
+        sprite.style.top = `${state.donkeyPos.y}px`;
+
+        // Flip sprite based on direction
+        sprite.classList.toggle('flipped', dx < 0);
+
+        requestAnimationFrame(moveToFruit);
+    };
+
+    feedButton.addEventListener('click', () => {
+        if (state.isMoving || state.isDigesting) return;
+
+        feedButton.disabled = true;
+        state.isMoving = true;
+
+        // Spawn fruit
+        const randomFruit = digitalFruits[Math.floor(Math.random() * digitalFruits.length)];
+        fruitImage.src = `assets/images/digital_fruits/${randomFruit}`;
         
-        // Riprova dopo un intervallo di tempo casuale
-        const nextCheck = Math.random() * 5000 + 4000; // Tra 4 e 9 secondi
-        setTimeout(manageSpeechBubble, nextCheck);
-    }
+        const padding = 50;
+        state.fruitPos.x = Math.random() * (animationScreen.offsetWidth - padding);
+        state.fruitPos.y = Math.random() * (animationScreen.offsetHeight - padding);
+        
+        fruitContainer.style.left = `${state.fruitPos.x}px`;
+        fruitContainer.style.top = `${state.fruitPos.y}px`;
+        fruitContainer.style.display = 'block';
 
+        moveToFruit();
+    });
 
-    // --- AVVIO DELLE ANIMAZIONI ---
-    moveSprite(); // Avvia il movimento
-    setTimeout(manageSpeechBubble, 2000); // Avvia le nuvolette dopo 2 secondi
-
+    // --- INIZIO ---
+    startIdleAnimation();
 });

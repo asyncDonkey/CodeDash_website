@@ -13,7 +13,7 @@
     <!-- Phosphor Icons for the fruit button -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <!-- Link to our CSS file -->
+    <!-- Link to our CSS file (Using your new path) -->
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
@@ -53,8 +53,9 @@
                 </div>
                 <div class="music-video">
                     <h3>Gameplay Video</h3>
-                    <!-- !!! REPLACE THIS LINK with the "embed" URL of your GAMEPLAY video !!! -->
+                    <!-- !!! FIXED: Added responsive styles !!! -->
                     <iframe 
+                        style="width: 100%; aspect-ratio: 16/9; border-radius: 5px;"
                         src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
                         title="YouTube video player" 
                         frameborder="0" 
@@ -73,9 +74,10 @@
                 </div>
                 <div style="flex: 1; min-width: 250px;">
                     <h3>Original Soundtrack</h3>
+                    <!-- !!! FIXED: Removed fixed width/height and added responsive styles !!! -->
                     <iframe 
                         style="width: 100%; aspect-ratio: 16/9; border-radius: 5px;"
-                        src="https://www.youtube.com/embed/Nacka_m2S2E?si=2s87C4n8gJkL9f8P" 
+                        src="https://www.youtube.com/embed/v0EaM7kwqMQ?si=9D2JOnw8PJdvRzec" 
                         title="YouTube video player" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -131,6 +133,7 @@
         </footer>
     </div>
 
+    <!-- Link to our JS file (Using your new path) -->
     <script src="js/script.js"></script>
 </body>
 </html>

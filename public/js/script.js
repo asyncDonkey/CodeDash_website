@@ -89,34 +89,67 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000); // Durata animazione digestione
     };
 
+    // --- NUOVA FUNZIONE PER TORNARE AL CENTRO ---
+    const returnToCenter = () => {
+        state.isMoving = true; // L'asino si sta ancora muovendo
+        const centerX = animationScreen.offsetWidth / 2;
+        const centerY = animationScreen.offsetHeight / 2;
+
+        const moveStep = () => {
+            const dx = centerX - state.donkeyPos.x;
+            const dy = centerY - state.donkeyPos.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 5) { // L'asino è arrivato al centro
+                state.isMoving = false;
+                sprite.classList.remove('flipped'); // Si gira in avanti
+
+                // Ora decide cosa fare
+                if (state.fruitEatenCount >= 5) {
+                    handleDigestion();
+                } else {
+                    feedButton.disabled = false;
+                }
+                return; // Ferma il ciclo di movimento
+            }
+
+            // Muove l'asino
+            const speed = 3;
+            state.donkeyPos.x += (dx / distance) * speed;
+            state.donkeyPos.y += (dy / distance) * speed;
+            sprite.style.left = `${state.donkeyPos.x}px`;
+            sprite.style.top = `${state.donkeyPos.y}px`;
+            sprite.classList.toggle('flipped', dx < 0);
+
+            requestAnimationFrame(moveStep);
+        };
+        moveStep();
+    };
+
+
     const moveToFruit = () => {
         const dx = state.fruitPos.x - state.donkeyPos.x;
         const dy = state.fruitPos.y - state.donkeyPos.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 10) { // Donkey has reached the fruit
-            state.isMoving = false;
+        if (distance < 10) { // L'asino ha raggiunto il frutto
             fruitContainer.style.display = 'none';
             sfx.eat.play();
             state.fruitEatenCount++;
             updateCounter();
+            
+            // MODIFICA: Invece di agire subito, torna al centro
+            returnToCenter();
 
-            if (state.fruitEatenCount >= 5) {
-                handleDigestion();
-            } else {
-                feedButton.disabled = false;
-            }
-            return;
+            return; // Ferma questo ciclo di movimento
         }
 
-        // Move donkey
+        // Muove l'asino
         const speed = 3;
         state.donkeyPos.x += (dx / distance) * speed;
         state.donkeyPos.y += (dy / distance) * speed;
         sprite.style.left = `${state.donkeyPos.x}px`;
         sprite.style.top = `${state.donkeyPos.y}px`;
-
-        // Flip sprite based on direction
         sprite.classList.toggle('flipped', dx < 0);
 
         requestAnimationFrame(moveToFruit);
@@ -128,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         feedButton.disabled = true;
         state.isMoving = true;
 
-        // Spawn fruit
+        // Genera un frutto
         const randomFruit = digitalFruits[Math.floor(Math.random() * digitalFruits.length)];
         fruitImage.src = `assets/images/digital_fruits/${randomFruit}`;
         

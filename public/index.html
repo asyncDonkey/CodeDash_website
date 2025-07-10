@@ -5,27 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeDash! - Official Page</title>
 
-    <!-- Google Fonts: Courier Prime and Pixelify Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 
-    <!-- Phosphor Icons for the fruit button -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <!-- Link to our CSS file (Using your new path) -->
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
 
     <div class="container">
-        <!-- TITLE SECTION -->
         <header>
             <h1 id="codedash-title">CodeDash!</h1>
         </header>
 
         <main>
-            <!-- NEW INTERACTIVE ANIMATION SECTION -->
             <section id="interactive-animation" class="content-box">
                 <p class="feed-prompt">Feed the donkey with delicious digital fruits!</p>
                 <div id="animation-screen">
@@ -45,7 +40,6 @@
                 </div>
             </section>
 
-            <!-- LORE AND GAMEPLAY VIDEO SECTION -->
             <section id="lore-music" class="content-box">
                 <div class="lore-text">
                     <h2>Game Lore</h2>
@@ -53,42 +47,40 @@
                 </div>
                 <div class="music-video">
                     <h3>Gameplay Video</h3>
-                    <!-- !!! FIXED: Added responsive styles !!! -->
-                    <iframe 
-                        style="width: 100%; aspect-ratio: 16/9; border-radius: 5px;"
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                        title="YouTube video player" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        referrerpolicy="strict-origin-when-cross-origin" 
-                        allowfullscreen>
-                    </iframe>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/6yjUXcvVLlw?si=ezhvNweMOKXcDxS0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
             </section>
 
-            <!-- MUSIC INFO AND SOUNDTRACK SECTION -->
-            <section id="chiptune-info" class="content-box" style="display: flex; flex-wrap: wrap; gap: 30px;">
-                <div style="flex: 2; min-width: 300px;">
-                    <h2>The Magic of Chiptune</h2>
-                    <p>The CodeDash! soundtrack is crafted in "chiptune" style, a music genre that uses the sound chips of old computers and consoles (like the Commodore 64 or Game Boy). Every note and effect has been meticulously programmed using a "tracker," software that allows composing music as if writing code, to create a nostalgic and adrenaline-fueled atmosphere that will accompany you on your dash.</p>
+            <section id="chiptune-info" class="content-box">
+                 <div class="interactive-donkey-wrapper">
+                    <div id="mission-donkey-container">
+                        <div id="mission-donkey" class="sprite-container">
+                            <div class="speech-bubble" id="mission-donkey-bubble"></div>
+                        </div>
+                        <p><i class="ph ph-hand-pointing"></i> Click the donkey</p>
+                    </div>
                 </div>
-                <div style="flex: 1; min-width: 250px;">
-                    <h3>Original Soundtrack</h3>
-                    <!-- !!! FIXED: Removed fixed width/height and added responsive styles !!! -->
-                    <iframe 
-                        style="width: 100%; aspect-ratio: 16/9; border-radius: 5px;"
-                        src="https://www.youtube.com/embed/v0EaM7kwqMQ?si=9D2JOnw8PJdvRzec" 
-                        title="YouTube video player" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        referrerpolicy="strict-origin-when-cross-origin" 
-                        allowfullscreen>
-                    </iframe>
+                <div class="flex-container">
+                    <div class="flex-item-text">
+                        <h2>The Magic of Chiptune</h2>
+                        <p>The CodeDash! soundtrack is crafted in "chiptune" style, a music genre that uses the sound chips of old computers and consoles (like the Commodore 64 or Game Boy). Every note and effect has been meticulously programmed using a "tracker," software that allows composing music as if writing code, to create a nostalgic and adrenaline-fueled atmosphere that will accompany you on your dash.</p>
+                    </div>
+                    <div class="flex-item-media">
+                        <h3>Original Soundtrack</h3>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?si=WPioHFg79ITddVMW&amp;list=PLvWKvaol0yYEwQ3snVulfvaKTyRikYc-V" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
                 </div>
             </section>
 
-            <!-- FEATURES SECTION -->
             <section id="features" class="content-box">
+                 <div class="interactive-donkey-wrapper">
+                    <div id="dev-donkey-container">
+                        <div id="dev-donkey" class="sprite-container">
+                            <div class="speech-bubble" id="dev-donkey-bubble"></div>
+                        </div>
+                        <p><i class="ph ph-hand-pointing"></i> Click the donkey</p>
+                    </div>
+                </div>
                 <h2>Features</h2>
                  <div class="feature-item privacy">
                     <h3>Totally Offline & Secure</h3>
@@ -116,7 +108,6 @@
                 </div>
             </section>
 
-            <!-- DOWNLOAD SECTION -->
             <section id="download" class="content-box">
                 <h2>Ready to Dash?</h2>
                 <p>The digital world needs you. Download CodeDash! now, it's free and has no ads!</p>
@@ -126,14 +117,13 @@
         </main>
 
         <footer>
-            <p>&copy; 2025 Your Name/Studio. All rights reserved.</p>
+            <p>© 2025 Your Name/Studio. All rights reserved.</p>
             <div class="footer-links">
-                <a href="#">Terms & Conditions</a> | <a href="#">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a> | <a href="privacy.html">Privacy Policy</a>
             </div>
         </footer>
     </div>
 
-    <!-- Link to our JS file (Using your new path) -->
     <script src="js/script.js"></script>
 </body>
 </html>

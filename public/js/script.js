@@ -31,37 +31,38 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- STATO DELL'ANIMAZIONE ---
+    const centerPos = { x: animationScreen.offsetWidth / 2, y: animationScreen.offsetHeight / 2 };
     let state = {
         fruitEatenCount: 0,
         isMoving: false,
         isDigesting: false,
         currentFrame: 0,
         animationInterval: null,
-        donkeyPos: { x: animationScreen.offsetWidth / 2, y: animationScreen.offsetHeight / 2 },
+        donkeyPos: { ...centerPos },
         fruitPos: { x: 0, y: 0 }
     };
     sprite.style.left = `${state.donkeyPos.x}px`;
     sprite.style.top = `${state.donkeyPos.y}px`;
 
     // --- FUNZIONI DI ANIMAZIONE DELLO SPRITE ---
-    const setSpriteAnimation = (spriteSheet, frameCount, frameRate) => {
-        clearInterval(state.animationInterval);
-        sprite.style.backgroundImage = `url('assets/images/${spriteSheet}')`;
-        state.animationInterval = setInterval(() => {
-            state.currentFrame = (state.currentFrame + 1) % frameCount;
-            sprite.style.backgroundPosition = `${-state.currentFrame * 64}px 0px`;
+    const setSpriteAnimation = (spriteElement, spriteSheet, frameCount, frameRate, stateObject) => {
+        clearInterval(stateObject.animationInterval);
+        spriteElement.style.backgroundImage = `url('assets/images/${spriteSheet}')`;
+        stateObject.animationInterval = setInterval(() => {
+            stateObject.currentFrame = (stateObject.currentFrame + 1) % frameCount;
+            spriteElement.style.backgroundPosition = `${-stateObject.currentFrame * 64}px 0px`;
         }, frameRate);
     };
-
-    const startIdleAnimation = () => setSpriteAnimation('donkey-dev-sprite.png', 5, 200);
-    const startDigestionAnimation = () => setSpriteAnimation('donkey-digest-sprite.png', 9, 3000 / 9);
+    
+    const startIdleAnimation = () => setSpriteAnimation(sprite, 'donkey-dev-sprite.png', 5, 200, state);
+    const startDigestionAnimation = () => setSpriteAnimation(sprite, 'donkey-digest-sprite.png', 9, 3000 / 9, state);
 
     // --- FUNZIONI DI GIOCO ---
-    const showBubble = (message) => {
-        bubble.textContent = message;
-        bubble.classList.add('visible');
+    const showBubble = (bubbleElement, message) => {
+        bubbleElement.textContent = message;
+        bubbleElement.classList.add('visible');
         sfx.comment.play();
-        setTimeout(() => bubble.classList.remove('visible'), 2500);
+        setTimeout(() => bubbleElement.classList.remove('visible'), 2500);
     };
 
     const updateCounter = () => {
@@ -75,10 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
         startDigestionAnimation();
         sfx.digest.play();
 
+        // Dopo l'animazione di digestione
         setTimeout(() => {
             startIdleAnimation();
-            showBubble(donkeyComments[Math.floor(Math.random() * donkeyComments.length)]);
+            showBubble(bubble, donkeyComments[Math.floor(Math.random() * donkeyComments.length)]);
             
+            // Dopo che il commento è sparito
             setTimeout(() => {
                 state.fruitEatenCount = 0;
                 updateCounter();
@@ -88,44 +91,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }, 3000); // Durata animazione digestione
     };
-
-    // --- NUOVA FUNZIONE PER TORNARE AL CENTRO ---
+    
     const returnToCenter = () => {
-        state.isMoving = true; // L'asino si sta ancora muovendo
-        const centerX = animationScreen.offsetWidth / 2;
-        const centerY = animationScreen.offsetHeight / 2;
+        const dx = centerPos.x - state.donkeyPos.x;
+        const dy = centerPos.y - state.donkeyPos.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
-        const moveStep = () => {
-            const dx = centerX - state.donkeyPos.x;
-            const dy = centerY - state.donkeyPos.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 5) { // L'asino è arrivato al centro
-                state.isMoving = false;
-                sprite.classList.remove('flipped'); // Si gira in avanti
-
-                // Ora decide cosa fare
-                if (state.fruitEatenCount >= 5) {
-                    handleDigestion();
-                } else {
-                    feedButton.disabled = false;
-                }
-                return; // Ferma il ciclo di movimento
-            }
-
-            // Muove l'asino
-            const speed = 3;
-            state.donkeyPos.x += (dx / distance) * speed;
-            state.donkeyPos.y += (dy / distance) * speed;
+        if (distance < 5) { // L'asino è tornato al centro
+            state.donkeyPos = { ...centerPos };
             sprite.style.left = `${state.donkeyPos.x}px`;
             sprite.style.top = `${state.donkeyPos.y}px`;
-            sprite.classList.toggle('flipped', dx < 0);
+            state.isMoving = false;
 
-            requestAnimationFrame(moveStep);
-        };
-        moveStep();
+            // Controlla se deve partire la digestione
+            if (state.fruitEatenCount >= 5) {
+                handleDigestion();
+            } else {
+                feedButton.disabled = false; // Riabilita il pulsante per il prossimo frutto
+            }
+            return;
+        }
+
+        const speed = 3;
+        state.donkeyPos.x += (dx / distance) * speed;
+        state.donkeyPos.y += (dy / distance) * speed;
+        sprite.style.left = `${state.donkeyPos.x}px`;
+        sprite.style.top = `${state.donkeyPos.y}px`;
+        
+        sprite.classList.toggle('flipped', dx < 0);
+        requestAnimationFrame(returnToCenter);
     };
-
 
     const moveToFruit = () => {
         const dx = state.fruitPos.x - state.donkeyPos.x;
@@ -137,21 +132,17 @@ document.addEventListener('DOMContentLoaded', () => {
             sfx.eat.play();
             state.fruitEatenCount++;
             updateCounter();
-            
-            // MODIFICA: Invece di agire subito, torna al centro
-            returnToCenter();
-
-            return; // Ferma questo ciclo di movimento
+            returnToCenter(); // Torna al centro dopo aver mangiato
+            return;
         }
 
-        // Muove l'asino
         const speed = 3;
         state.donkeyPos.x += (dx / distance) * speed;
         state.donkeyPos.y += (dy / distance) * speed;
         sprite.style.left = `${state.donkeyPos.x}px`;
         sprite.style.top = `${state.donkeyPos.y}px`;
-        sprite.classList.toggle('flipped', dx < 0);
 
+        sprite.classList.toggle('flipped', dx < 0);
         requestAnimationFrame(moveToFruit);
     };
 
@@ -161,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
         feedButton.disabled = true;
         state.isMoving = true;
 
-        // Genera un frutto
         const randomFruit = digitalFruits[Math.floor(Math.random() * digitalFruits.length)];
         fruitImage.src = `assets/images/digital_fruits/${randomFruit}`;
         
@@ -176,6 +166,84 @@ document.addEventListener('DOMContentLoaded', () => {
         moveToFruit();
     });
 
-    // --- INIZIO ---
+    // --- INIZIO GIOCO PRINCIPALE---
     startIdleAnimation();
+
+    // --- NUOVE SEZIONI INTERATTIVE ---
+    const setupInteractiveDonkey = (donkeyId, bubbleId, idleSprite, commentSprite, comments) => {
+        const donkeyElement = document.getElementById(donkeyId);
+        const bubbleElement = document.getElementById(bubbleId);
+        
+        if (!donkeyElement || !bubbleElement) {
+            console.error(`Elementi per ${donkeyId} non trovati!`);
+            return;
+        }
+
+        const donkeyState = {
+            isCommenting: false,
+            currentFrame: 0,
+            animationInterval: null,
+        };
+
+        const idleFrameCount = 5;
+        const commentFrameCount = 9;
+        const commentDuration = 2500;
+
+        const startIdle = () => setSpriteAnimation(donkeyElement, idleSprite, idleFrameCount, 200, donkeyState);
+        const startComment = () => setSpriteAnimation(donkeyElement, commentSprite, commentFrameCount, commentDuration / commentFrameCount, donkeyState);
+
+        donkeyElement.parentElement.addEventListener('click', () => {
+            if (donkeyState.isCommenting) return;
+
+            donkeyState.isCommenting = true;
+            
+            const randomComment = comments[Math.floor(Math.random() * comments.length)];
+            bubbleElement.textContent = randomComment;
+            bubbleElement.classList.add('visible');
+            sfx.comment.play();
+            startComment();
+
+            setTimeout(() => {
+                bubbleElement.classList.remove('visible');
+                startIdle();
+                setTimeout(() => {
+                     donkeyState.isCommenting = false;
+                }, 100); 
+            }, commentDuration);
+        });
+        
+        startIdle();
+    };
+
+    // Setup Mission Donkey (Chiptune)
+    const missionDonkeyComments = [
+        "OST realizzata composta a mano!",
+        "I love chiptune!",
+        "Is that an 8-bit blip?",
+        "This music is my jam!"
+    ];
+    setupInteractiveDonkey(
+        'mission-donkey', 
+        'mission-donkey-bubble', 
+        'mission_legend_donkey_idle.png', 
+        'mission_legend_donkey_comment.png', 
+        missionDonkeyComments
+    );
+
+    // Setup Dev Donkey (Features)
+    const devDonkeyComments = [
+        "JavaScript!",
+        "You can play everywhere!",
+        "No internet connection req!",
+        "Fast gameplay and lot's of enemies!",
+        "Bosses!",
+        "The engineer was good!"
+    ];
+    setupInteractiveDonkey(
+        'dev-donkey', 
+        'dev-donkey-bubble', 
+        'dev_donkey_idle.png', 
+        'dev_donkey_comment.png', 
+        devDonkeyComments
+    );
 });

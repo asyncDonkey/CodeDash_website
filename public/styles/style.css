@@ -28,7 +28,7 @@ body {
 h1, h2, h3 {
     font-family: 'Pixelify Sans', sans-serif;
     color: var(--highlight-color);
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     letter-spacing: 2px;
 }
 
@@ -174,13 +174,17 @@ header {
 .sprite-container {
     width: 64px;
     height: 64px;
-    background-image: url('donkey-dev-sprite.png');
     background-repeat: no-repeat;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     transition: left 0.1s linear, top 0.1s linear;
+    /* Regola per la visualizzazione corretta della pixel art */
+    image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: -webkit-crisp-edges; /* Chrome, Safari */
+    image-rendering: pixelated; /* Standard */
+    image-rendering: crisp-edges;
 }
 
 /* Classe per girare lo sprite */
@@ -237,6 +241,47 @@ header {
     aspect-ratio: 16 / 9;
     border-radius: 5px;
 }
+
+/* Stili per le nuove sezioni con asini interattivi */
+.interactive-donkey-wrapper {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+.interactive-donkey-wrapper .sprite-container {
+    position: relative;
+    display: inline-block;
+    transform: none; /* Sovrascrive la trasformazione assoluta */
+    left: auto;
+    top: auto;
+    background-image: url('../assets/images/dev_donkey_idle.png');
+}
+.interactive-donkey-wrapper p {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+.interactive-donkey-wrapper .speech-bubble {
+    bottom: 65px; /* Aggiustato per la nuova posizione */
+}
+#mission-donkey {
+    background-image: url('../assets/images/mission_legend_donkey_idle.png');
+}
+#chiptune-info .flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+}
+#chiptune-info .flex-item-text { flex: 2; min-width: 300px; }
+#chiptune-info .flex-item-media { flex: 1; min-width: 250px; }
+#chiptune-info .flex-item-media iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 5px;
+}
+
 
 #features ul {
     list-style: none;
@@ -297,4 +342,5 @@ footer {
     body { font-size: 16px; }
     #codedash-title { font-size: 3em; }
     .content-box { padding: 20px; }
+    #chiptune-info .flex-container { flex-direction: column; }
 }

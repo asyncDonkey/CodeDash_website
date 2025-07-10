@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'digital_strawberry.png', 'digital_watermelon.png'
     ];
     const donkeyComments = [
-        "Yummy!", "Delicious!", "More fruits, please!", "That was refreshing!", "My favorite!"
+        "Yummy!", "Delicious!", "More fruits, please!", "Digested!", "digitalFruits!"
     ];
     const sfx = {
         eat: new Audio('assets/sfx/sfx_donkey_eat.ogg'),
@@ -217,10 +217,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Setup Mission Donkey (Chiptune)
     const missionDonkeyComments = [
-        "OST realizzata composta a mano!",
+        "Hand-composed OST!",
         "I love chiptune!",
         "Is that an 8-bit blip?",
-        "This music is my jam!"
+        "combatCode is my fav!"
     ];
     setupInteractiveDonkey(
         'mission-donkey', 
@@ -246,4 +246,50 @@ document.addEventListener('DOMContentLoaded', () => {
         'dev_donkey_comment.png', 
         devDonkeyComments
     );
+    // --- NUOVA FUNZIONE PER FRUTTI FLUTTUANTI ---
+    const setupFloatingFruits = () => {
+        const container = document.getElementById('floating-fruits-container');
+        if (!container) return;
+
+        // Selezioniamo 6 frutti casuali dalla lista esistente
+        const shuffledFruits = [...digitalFruits].sort(() => 0.5 - Math.random());
+        const fruitsToDisplay = shuffledFruits.slice(0, 6);
+
+        const fruitElements = [];
+
+        fruitsToDisplay.forEach(fruitName => {
+            const img = document.createElement('img');
+            img.src = `assets/images/digital_fruits/${fruitName}`;
+            img.classList.add('floating-fruit');
+            // Aggiungiamo dati custom per sfalsare l'animazione di ogni frutto
+            img.dataset.offset = Math.random() * Math.PI * 2;
+            container.appendChild(img);
+            fruitElements.push(img);
+        });
+
+        const amplitude = 8; // Escursione del movimento (8px su e 8px giù)
+        const speed = 0.01;  // MODIFICATO: Velocità dell'animazione (più basso = più lento)
+
+        function animateFruits() {
+            // Usiamo il tempo per creare un'oscillazione continua
+            const time = Date.now() * speed;
+
+            fruitElements.forEach(fruit => {
+                const offset = parseFloat(fruit.dataset.offset);
+                // Calcoliamo la nuova posizione Y con una sinusoide
+                const y = Math.sin(time + offset) * amplitude;
+                fruit.style.transform = `translateY(${y}px)`;
+            });
+
+            // Richiama il prossimo frame dell'animazione
+            requestAnimationFrame(animateFruits);
+        }
+
+        // Avvia l'animazione
+        animateFruits();
+    };
+
+    // Chiamiamo la nuova funzione per attivare i frutti
+    setupFloatingFruits();
+
 });

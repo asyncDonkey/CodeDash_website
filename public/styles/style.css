@@ -53,7 +53,7 @@ header {
     font-size: 4.5em;
     font-weight: bold;
     color: #ffffff;
-    text-shadow: 
+    text-shadow:
         0 0 5px var(--glow-start), 0 0 10px var(--glow-start),
         0 0 15px var(--glow-end), 0 0 20px var(--glow-end);
     animation: glowAnimation 1.5s infinite alternate;
@@ -61,12 +61,12 @@ header {
 
 @keyframes glowAnimation {
     from {
-        text-shadow: 
+        text-shadow:
             0 0 5px #0ce6f2, 0 0 10px #0098db, 0 0 15px #1e579c,
             0 0 20px #203562, 0 0 25px #252446, 0 0 30px #201533;
     }
     to {
-        text-shadow: 
+        text-shadow:
             0 0 10px #0ce6f2, 0 0 20px #0098db, 0 0 30px #1e579c,
             0 0 40px #203562, 0 0 50px #252446, 0 0 60px #201533,
             0 0 70px #0ce6f2;
@@ -131,6 +131,11 @@ header {
 #fruit-container img {
     width: 100%;
     height: 100%;
+    /* NUOVA REGOLA per la visualizzazione corretta della pixel art */
+    image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: -webkit-crisp-edges; /* Chrome, Safari */
+    image-rendering: pixelated; /* Standard */
+    image-rendering: crisp-edges;
 }
 #controls {
     display: flex;
@@ -337,10 +342,87 @@ footer {
     margin: 0 10px;
 }
 
+/* --- SEZIONE FRUTTI FLUTTUANTI --- */
+#floating-fruits-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px; /* Spazio tra i frutti */
+    margin-bottom: 50px; /* Spazio prima del primo box */
+    margin-top: -20px; /* Li avvicina un po' al titolo */
+    flex-wrap: wrap;
+}
+
+.floating-fruit {
+    width: 48px;
+    height: 48px;
+    /* Mantiene la pixel art definita */
+    image-rendering: pixelated;
+    image-rendering: -webkit-crisp-edges;
+    /* Animazione Glow (brillio) con un filtro */
+    animation: fruit-glow-animation 2s infinite alternate;
+    position: relative; /* Necessario per l'animazione JS */
+}
+
+/* Keyframes per l'effetto glow pulsante */
+@keyframes fruit-glow-animation {
+    from {
+        filter: drop-shadow(0 0 6px var(--highlight-color));
+    }
+    to {
+        filter: drop-shadow(0 0 14px var(--glow-end));
+    }
+}
+
 /* --- MEDIA QUERIES PER RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
-    body { font-size: 16px; }
-    #codedash-title { font-size: 3em; }
-    .content-box { padding: 20px; }
-    #chiptune-info .flex-container { flex-direction: column; }
+    body {
+        font-size: 16px;
+        padding-left: 0; /* Rimuoviamo il padding laterale dal body */
+        padding-right: 0;
+    }
+    .container {
+        padding-left: 15px; /* Spostiamo il padding nel container per un controllo migliore */
+        padding-right: 15px;
+    }
+    p, li {
+        font-size: 0.95em; /* Riduciamo leggermente il testo dei paragrafi e degli elenchi */
+        line-height: 1.5;
+    }
+    #codedash-title {
+        font-size: 2.8em; /* Titolo più piccolo su mobile */
+        margin-bottom: 40px;
+    }
+    #floating-fruits-container {
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    .floating-fruit {
+        width: 36px;
+        height: 36px;
+    }
+    .content-box {
+        padding: 20px 15px; /* Riduciamo il padding verticale e orizzontale */
+        border-left: none; /* Rimuoviamo i bordi laterali */
+        border-right: none;
+        border-radius: 0; /* Rimuoviamo la stondatura per un effetto a schermo intero */
+        margin-left: -15px; /* Facciamo estendere i box a tutto schermo */
+        margin-right: -15px;
+    }
+    #lore-music,
+    #chiptune-info .flex-container {
+        flex-direction: column; /* Impiliamo le sezioni flessibili in verticale */
+        gap: 20px;
+    }
+    #controls {
+        flex-direction: column; /* Impiliamo i controlli del donkey */
+        gap: 15px;
+    }
+    .cta-button {
+        font-size: 1.2em; /* Riduciamo il pulsante di download */
+        padding: 12px 30px;
+    }
+    footer {
+        padding: 0 20px; /* Aggiungiamo padding al footer per non farlo toccare i bordi */
+    }
 }
